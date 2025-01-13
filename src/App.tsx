@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useRef } from 'react'
 import  {Model}  from './Scene'
-import { Environment, OrbitControls } from '@react-three/drei'
+import {  OrbitControls } from '@react-three/drei'
 
 function App() {
   const cameraRef = useRef<HTMLCanvasElement | null>(null);

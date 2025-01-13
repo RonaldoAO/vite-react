@@ -7,11 +7,10 @@ title: Low Poly 90s Office Cubicle
 */
 
 import * as THREE from 'three'
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
-import { GLTF } from 'three/examples/jsm/loaders/GLTFLoader'
 
-type GLTFResult = GLTF & {
+type GLTFResult = {
   nodes: {
     ['Phonehandle_Panasonic_KX-T7420_0']: THREE.Mesh
     ['Body_Panasonic_KX-T7420_0']: THREE.Mesh
@@ -145,7 +144,6 @@ type GLTFResult = GLTF & {
     Cubicle_Trim: THREE.MeshStandardMaterial
     Folder: THREE.MeshStandardMaterial
     Stack_of_Papers: THREE.MeshStandardMaterial
-    Stack_of_Papers: THREE.MeshStandardMaterial
     Corkboard: THREE.MeshStandardMaterial
     Pin_Board: THREE.MeshStandardMaterial
     Rubiks_Cube: THREE.MeshStandardMaterial
@@ -162,7 +160,6 @@ type GLTFResult = GLTF & {
     Mesh_Basket: THREE.MeshStandardMaterial
     Speed_VHS: THREE.MeshStandardMaterial
     Super_Mario_64_Cartridge: THREE.MeshStandardMaterial
-    Desk: THREE.MeshStandardMaterial
     Swingline_Stapler: THREE.MeshStandardMaterial
     Business_Card_1: THREE.MeshStandardMaterial
     Name_Plate: THREE.MeshStandardMaterial
@@ -182,8 +179,8 @@ type GLTFResult = GLTF & {
 }
 
 export const  Model = (props: JSX.IntrinsicElements['group']) => {
-  const group = useRef<THREE.Group>()
-  const { nodes, materials } = useGLTF('/scene.gltf') as GLTFResult
+  const group = useRef<THREE.Group>(null)
+  const { nodes, materials } = useGLTF('/scene.gltf') as unknown as GLTFResult
   return (
     <group ref={group} {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
