@@ -1,0 +1,11 @@
+Model Information:
+* title:	Trivia Podium
+* source:	https://sketchfab.com/3d-models/trivia-podium-316c947c0b54485bbd5edd29c73a6a00
+* author:	crittaa (https://sketchfab.com/crittaa)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Trivia Podium" (https://sketchfab.com/3d-models/trivia-podium-316c947c0b54485bbd5edd29c73a6a00) by crittaa (https://sketchfab.com/crittaa) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
