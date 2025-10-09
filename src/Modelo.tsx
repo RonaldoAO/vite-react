@@ -182,7 +182,7 @@ type GLTFResult = GLTF & {
 }
 
 export function Model(props: JSX.IntrinsicElements['group']) {
-  const { nodes, materials } = useGLTF('../public/scene2.gltf') as GLTFResult
+  const { nodes, materials } = useGLTF('/scene2.gltf') as GLTFResult
   return (
     <group {...props} dispose={null}>
       <group name="Sketchfab_model002" position={[0, 0, 0.361]} rotation={[-Math.PI / 2, 0, 0]}>
