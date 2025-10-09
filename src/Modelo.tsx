@@ -4,7 +4,6 @@ Command: npx gltfjsx@6.5.3 public/scene2.gltf -o src/Modelo.tsx --types --keepna
 */
 
 import * as THREE from 'three'
-import React from 'react'
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three-stdlib'
 
@@ -179,7 +178,7 @@ type GLTFResult = GLTF & {
     ['Material.013']: THREE.MeshStandardMaterial
     ['Material.014']: THREE.MeshStandardMaterial
   }
-  animations: GLTFAction[]
+  animations: any[]
 }
 
 export function Model(props: JSX.IntrinsicElements['group']) {
