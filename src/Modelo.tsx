@@ -181,8 +181,18 @@ type GLTFResult = GLTF & {
   animations: any[]
 }
 
-export function Model(props: JSX.IntrinsicElements['group']) {
+type ModelProps = JSX.IntrinsicElements['group'] & {
+  visibleObjects?: Set<string>
+}
+
+export function Model({ visibleObjects, ...props }: ModelProps) {
   const { nodes, materials } = useGLTF('/scene2.gltf') as GLTFResult
+
+  const isVisible = (name: string) => {
+    if (!visibleObjects) return true
+    return visibleObjects.has(name)
+  }
+
   return (
     <group {...props} dispose={null}>
       <group name="Sketchfab_model002" position={[0, 0, 0.361]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -260,21 +270,21 @@ export function Model(props: JSX.IntrinsicElements['group']) {
       <mesh name="Plane003" geometry={nodes.Plane003.geometry} material={materials['Material.013']} position={[0.407, 1.196, -0.717]} rotation={[1.333, -0.082, 0.333]} scale={[0.077, 0.263, 0.047]} />
       <mesh name="Plane004" geometry={nodes.Plane004.geometry} material={materials['Material.014']} position={[1.161, 0.989, -0.755]} rotation={[Math.PI / 2, 0, -Math.PI / 2]} scale={[0.284, 1, 0.519]} />
       <group name="c7ca0b3869ba42d1ace1e163b90d388bfbx" scale={0.01}>
-        <group name="Blade_Runner_Poster" position={[116.67, 97.534, -76.631]} rotation={[0.07, Math.PI / 2, 0]} scale={[104, 104, 0]}>
+        <group name="Blade_Runner_Poster" position={[116.67, 97.534, -76.631]} rotation={[0.07, Math.PI / 2, 0]} scale={[104, 104, 0]} visible={isVisible('Blade_Runner_Poster')}>
           <mesh name="Blade_Runner_Poster_Blade_Runner_Poster_0" geometry={nodes.Blade_Runner_Poster_Blade_Runner_Poster_0.geometry} material={materials.Blade_Runner_Poster} position={[0, 0, 0.983]} />
         </group>
-        <group name="Cubicle_Desk" position={[-57.792, 59.982, -11.777]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} scale={100}>
+        <group name="Cubicle_Desk" position={[-57.792, 59.982, -11.777]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} scale={100} visible={isVisible('Cubicle_Desk')}>
           <mesh name="Cubicle_Desk_Desk_Legs_0" geometry={nodes.Cubicle_Desk_Desk_Legs_0.geometry} material={materials.Desk_Legs} />
           <mesh name="Cubicle_Desk_Desk_0" geometry={nodes.Cubicle_Desk_Desk_0.geometry} material={materials.Desk} />
         </group>
-        <group name="Glowing_Screen" position={[-77.692, 107.123, -74.439]} rotation={[0, Math.PI / 4, 0]} scale={15.008}>
+        <group name="Glowing_Screen" position={[-77.692, 107.123, -74.439]} rotation={[0, Math.PI / 4, 0]} scale={15.008} visible={isVisible('Glowing_Screen')}>
           <mesh name="Glowing_Screen_Screen_Emission_0" geometry={nodes.Glowing_Screen_Screen_Emission_0.geometry} material={materials['Material.007']} rotation={[Math.PI, -0.001, Math.PI]} />
         </group>
-        <group name="Potted_Plant" position={[52.952, 137.716, -94.981]} rotation={[-Math.PI / 2, 0, 0.436]} scale={19.5}>
+        <group name="Potted_Plant" position={[52.952, 137.716, -94.981]} rotation={[-Math.PI / 2, 0, 0.436]} scale={19.5} visible={isVisible('Potted_Plant')}>
           <mesh name="Potted_Plant_Aglaonema_Leaf_0" geometry={nodes.Potted_Plant_Aglaonema_Leaf_0.geometry} material={materials.Aglaonema_Leaf} />
           <mesh name="Potted_Plant_Pot_Plant_0" geometry={nodes.Potted_Plant_Pot_Plant_0.geometry} material={materials.Pot_Plant} />
         </group>
-        <group name="Terminator_Poster" position={[61.222, 100.976, 117.201]} rotation={[-Math.PI, 0, -3.122]} scale={[80, 80, 0]}>
+        <group name="Terminator_Poster" position={[61.222, 100.976, 117.201]} rotation={[-Math.PI, 0, -3.122]} scale={[80, 80, 0]} visible={isVisible('Terminator_Poster')}>
           <mesh name="Terminator_Poster_Terminator_Poster_0" geometry={nodes.Terminator_Poster_Terminator_Poster_0.geometry} material={materials.Terminator_Poster} position={[0, 0, -0.57]} />
         </group>
         <mesh name="2_Drawer_Filing_Cabinet_2_Door_Filing_Container_0" geometry={nodes['2_Drawer_Filing_Cabinet_2_Door_Filing_Container_0'].geometry} material={materials['2_Door_Filing_Container']} position={[-86.3, 35.988, 87.741]} rotation={[-Math.PI / 2, 0, 0]} scale={100} />
@@ -289,7 +299,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Calculator_Calculator_0" geometry={nodes.Calculator_Calculator_0.geometry} material={materials.Calculator} position={[-44.297, 45.597, -86.92]} rotation={[-Math.PI / 2, 0, -Math.PI / 6]} scale={3.281} />
         <mesh name="Carpetimg_carpet_0" geometry={nodes.Carpetimg_carpet_0.geometry} material={materials.carpet} position={[0, 0, 3.835]} rotation={[-Math.PI / 2, 0, 0]} scale={240} />
         <mesh name="Clipboard_Clipboard_0" geometry={nodes.Clipboard_Clipboard_0.geometry} material={materials.Clipboard} position={[99.688, 0.318, -23.566]} rotation={[-Math.PI / 2, 0, 0.698]} scale={[8.027, 10.327, 10.327]} />
-        <mesh name="Computer_Monitor_PC_Monitor_amd_Keyboard_0" geometry={nodes.Computer_Monitor_PC_Monitor_amd_Keyboard_0.geometry} material={materials.PC_Monitor_amd_Keyboard} position={[-90.028, 99.752, -86.591]} rotation={[-Math.PI / 2, 0, -Math.PI / 4]} scale={[15.893, 17.778, 17.778]} />
+        <mesh name="Computer_Monitor_PC_Monitor_amd_Keyboard_0" geometry={nodes.Computer_Monitor_PC_Monitor_amd_Keyboard_0.geometry} material={materials.PC_Monitor_amd_Keyboard} position={[-90.028, 99.752, -86.591]} rotation={[-Math.PI / 2, 0, -Math.PI / 4]} scale={[15.893, 17.778, 17.778]} visible={isVisible('Computer_Monitor')} />
         <mesh name="Corkboard_Corkboard_0" geometry={nodes.Corkboard_Corkboard_0.geometry} material={materials.Corkboard} position={[-17.879, 125.627, -114.356]} rotation={[-Math.PI / 2, 0, 0]} scale={4} />
         <mesh name="Cubicle_Cubicle_Wall_0" geometry={nodes.Cubicle_Cubicle_Wall_0.geometry} material={materials.Cubicle_Wall} position={[-16.93, 84.399, -6.542]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} scale={100} />
         <mesh name="Cubicle_Trim_Cubicle_Trim_0" geometry={nodes.Cubicle_Trim_Cubicle_Trim_0.geometry} material={materials.Cubicle_Trim} position={[-16.376, 84.898, -4.593]} rotation={[-Math.PI / 2, 0, Math.PI / 2]} scale={100} />
@@ -303,8 +313,8 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Handbook_for_the_Recently_Deceased001_Material_0" geometry={nodes.Handbook_for_the_Recently_Deceased001_Material_0.geometry} material={materials['Material.001']} position={[-108.088, 138.496, 13.437]} rotation={[-Math.PI / 2, -Math.PI / 2, 0]} scale={[8.4, 1.4, 7]} />
         <mesh name="Hang_In_There_Poster_Hang_In_There_0" geometry={nodes.Hang_In_There_Poster_Hang_In_There_0.geometry} material={materials.Hang_In_There} position={[93.658, 106.168, -114.384]} scale={50} />
         <mesh name="hinge_Office_Chair_0" geometry={nodes.hinge_Office_Chair_0.geometry} material={materials.Office_Chair} position={[17.445, 47.559, 3.764]} rotation={[-Math.PI / 2, 0, -0.611]} scale={0.92} />
-        <mesh name="Keyboard_PC_Monitor_amd_Keyboard_0" geometry={nodes.Keyboard_PC_Monitor_amd_Keyboard_0.geometry} material={materials.PC_Monitor_amd_Keyboard} position={[-67.841, 76.211, -55.377]} rotation={[-Math.PI / 2, 0, 0.885]} scale={39.493} />
-        <mesh name="mouse_PC_Tower_and_Mouse_0" geometry={nodes.mouse_PC_Tower_and_Mouse_0.geometry} material={materials.PC_Tower_and_Mouse} position={[-40.755, 75.536, -75.159]} rotation={[-Math.PI / 2, 0, -0.96]} scale={30.894} />
+        <mesh name="Keyboard_PC_Monitor_amd_Keyboard_0" geometry={nodes.Keyboard_PC_Monitor_amd_Keyboard_0.geometry} material={materials.PC_Monitor_amd_Keyboard} position={[-67.841, 76.211, -55.377]} rotation={[-Math.PI / 2, 0, 0.885]} scale={39.493} visible={isVisible('Keyboard')} />
+        <mesh name="mouse_PC_Tower_and_Mouse_0" geometry={nodes.mouse_PC_Tower_and_Mouse_0.geometry} material={materials.PC_Tower_and_Mouse} position={[-40.755, 75.536, -75.159]} rotation={[-Math.PI / 2, 0, -0.96]} scale={30.894} visible={isVisible('mouse')} />
         <mesh name="Name_Plate_Name_Plate_0" geometry={nodes.Name_Plate_Name_Plate_0.geometry} material={materials.Name_Plate} position={[120.605, 156.222, -24.97]} rotation={[0, 1.571, 0]} scale={9.52} />
         <mesh name="Necronomicon_Necronomicon_0" geometry={nodes.Necronomicon_Necronomicon_0.geometry} material={materials.Necronomicon} position={[98.75, 9.706, -81.582]} rotation={[-0.051, 0.19, 0.971]} scale={[8.4, 1.4, 7]} />
         <mesh name="NEWS_NEWS_0" geometry={nodes.NEWS_NEWS_0.geometry} material={materials.NEWS} position={[-114.563, 105.62, -49.375]} rotation={[0, 1.571, 0]} scale={28} />
@@ -321,7 +331,7 @@ export function Model(props: JSX.IntrinsicElements['group']) {
         <mesh name="Piston_Office_Chair_0" geometry={nodes.Piston_Office_Chair_0.geometry} material={materials.Office_Chair} position={[2.183, 37.137, -6.923]} rotation={[-Math.PI / 2, 0, -0.611]} scale={9.784} />
         <mesh name="Power_Cables_Power_Cable_0" geometry={nodes.Power_Cables_Power_Cable_0.geometry} material={materials.Power_Cable} position={[-103.435, 41.242, -14.317]} rotation={[-Math.PI / 2, 0, 0]} scale={100} />
         <mesh name="Power_Plugs_Power_Cable_0" geometry={nodes.Power_Plugs_Power_Cable_0.geometry} material={materials.Power_Cable} position={[-107.081, 5.749, 3.222]} rotation={[-Math.PI / 2, 0, 0]} scale={10} />
-        <mesh name="Rubiks_Cube_Rubiks_Cube_0" geometry={nodes.Rubiks_Cube_Rubiks_Cube_0.geometry} material={materials.Rubiks_Cube} position={[-100.925, 77.556, -36.815]} rotation={[-Math.PI / 2, 0, -0.436]} scale={4.569} />
+        <mesh name="Rubiks_Cube_Rubiks_Cube_0" geometry={nodes.Rubiks_Cube_Rubiks_Cube_0.geometry} material={materials.Rubiks_Cube} position={[-100.925, 77.556, -36.815]} rotation={[-Math.PI / 2, 0, -0.436]} scale={4.569} visible={isVisible('Rubiks_Cube')} />
         <mesh name="Secret_File_Stack_of_Papers_0" geometry={nodes.Secret_File_Stack_of_Papers_0.geometry} material={materials['Stack_of_Papers.001']} position={[48.564, 30.157, -68.13]} rotation={[-Math.PI / 2, 0, 0]} scale={[10.795, 13.97, 10.594]} />
         <mesh name="Shelf_Desk_0" geometry={nodes.Shelf_Desk_0.geometry} material={materials['Desk.001']} position={[-110.254, 126.246, -2.482]} rotation={[-Math.PI / 2, 0, 0]} scale={[8.973, 44.467, 1.666]} />
         <mesh name="Speed_Bus_Schedule_Speed_Bus_Schedule_0" geometry={nodes.Speed_Bus_Schedule_Speed_Bus_Schedule_0.geometry} material={materials.Speed_Bus_Schedule} position={[-71.684, 124.496, 96.575]} rotation={[-Math.PI / 2, 0, -2.967]} scale={30.25} />
