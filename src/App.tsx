@@ -1,5 +1,5 @@
 import type { CSSProperties, MouseEvent as ReactMouseEvent, TransitionEvent as ReactTransitionEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { memo, useEffect, useMemo, useRef, useState } from 'react'
 
 type GalleryItem = {
   alt: string
@@ -27,9 +27,24 @@ type AwardPreviewLayer = {
   src: string
 }
 type AwardScrollDirection = 'down' | 'up'
+type SpiralCardLayout = {
+  item: GalleryItem
+  style: CSSProperties
+}
 
 const clamp = (value: number, min = 0, max = 1) => Math.min(max, Math.max(min, value))
 const lerp = (start: number, end: number, amount: number) => start + (end - start) * amount
+const entryBandThreshold = 0.18
+const shuffleArray = <T,>(items: T[]) => {
+  const next = [...items]
+
+  for (let index = next.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1))
+    ;[next[index], next[randomIndex]] = [next[randomIndex], next[index]]
+  }
+
+  return next
+}
 
 const galleryFilenames = [
   'photo1712463980 (2).jpg',
@@ -88,6 +103,17 @@ const awardItems: AwardItem[] = [
   { name: 'Interledger hackathon', org: 'First Place', image: '/gallery/awards/INTERLEDGERMEXICO.jpg' },
   { name: 'Nasa Space apps 2025', org: 'Award', image: '/gallery/awards/NASA2025.jpeg' },
   { name: 'Interledger STUDENT OAXACA', org: 'Award', image: '/gallery/awards/INTERLEDGERLOCAL.jpeg' },
+  { name: 'La salle code challenge', org: 'Finalist', image: '/gallery/awards/LASALLE2025.jpeg' },
+  { name: 'Construyendo el futuro', org: 'Award', image: '/gallery/awards/CENTRO.jpeg' },
+  { name: 'Hackathon Canacintra', org: 'Award', image: '/gallery/awards/CANACINTRA.jpeg' },
+  { name: 'youth hackathon unesco', org: 'Award', image: '/gallery/awards/UNESCO.jpeg' },
+  { name: 'internet computer', org: 'First Place', image: '/gallery/awards/FLOWFINDER.jpeg' },
+  { name: 'Mega Hackathon Oaxaca', org: 'First Place', image: '/gallery/awards/VOTEICP.jpeg' },
+  { name: 'la salle code challenge 2024', org: 'Finalist', image: '/gallery/awards/LASALLE2024.jpeg' },
+  { name: 'talent land 2024', org: 'Finalist', image: '/gallery/awards/TALENT2024.jpeg' },
+  { name: 'decima guelaguetza matematica', org: 'Award', image: '/gallery/awards/GUELAGUETZA.jpeg' },
+  { name: 'expociencias 2023', org: 'Finalist', image: '/gallery/awards/EXPOCIENCIAS.jpeg' },
+  { name: 'la salle code challenge 2022', org: 'Finalist', image: '/gallery/awards/LASALLE2022.jpeg' },
 ]
 
 const takeoverImage = {
@@ -104,6 +130,43 @@ const initialPreviewLayer: AwardPreviewLayer = {
 }
 
 const getAwardKey = (award: AwardItem) => `${award.name}-${award.org}`
+
+const getStaticSpiralPoint = (normalized: number) => {
+  if (normalized <= entryBandThreshold) {
+    const local = normalized / entryBandThreshold
+
+    return {
+      angle: lerp(62, -62, local),
+      depth: lerp(152, 118, local),
+      panelHeight: lerp(192, 186, local),
+      radius: lerp(500, 452, local),
+      vertical: lerp(-248, -236, local),
+    }
+  }
+
+  const local = (normalized - entryBandThreshold) / (1 - entryBandThreshold)
+
+  return {
+    angle: -56 - local * 780,
+    depth: lerp(120, -118, local),
+    panelHeight: lerp(184, 126, local),
+    radius: lerp(452, 176, local),
+    vertical: lerp(-248, 356, local),
+  }
+}
+
+const SpiralCard = memo(function SpiralCard({ item, style, eager }: SpiralCardLayout & { eager: boolean }) {
+  return (
+    <div className="spiral-card" style={style}>
+      <div className="spiral-face spiral-face-front">
+        <img src={item.src} alt={item.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchPriority={eager ? 'high' : 'auto'} />
+      </div>
+      <div className="spiral-face spiral-face-back">
+        <img src={item.src} alt={item.alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      </div>
+    </div>
+  )
+})
 
 function LinkedInIcon() {
   return (
@@ -128,6 +191,7 @@ function App() {
   const introFrameHandleRef = useRef<number>(0)
   const awardResetFramesRef = useRef<Record<string, number[]>>({})
   const awardsInputModeMediaRef = useRef<MediaQueryList | null>(null)
+  const phoneMediaRef = useRef<MediaQueryList | null>(null)
   const lastKnownScrollYRef = useRef(0)
   const awardPreviewLayerIdRef = useRef(0)
   const awardTrackOffsetsRef = useRef<Record<string, number>>({})
@@ -135,6 +199,7 @@ function App() {
   const awardTrackHoveredRef = useRef<Record<string, boolean>>({})
   const activeTouchAwardKeyRef = useRef<string | null>(null)
   const touchAwardsModeRef = useRef(false)
+  const isPhoneRef = useRef(false)
 
   const [progress, setProgress] = useState(0)
   const [introProgress, setIntroProgress] = useState(0)
@@ -144,6 +209,29 @@ function App() {
   const [awardTrackNoTransition, setAwardTrackNoTransition] = useState<Record<string, boolean>>({})
   const [awardPreviewLayers, setAwardPreviewLayers] = useState<AwardPreviewLayer[]>([initialPreviewLayer])
   const [touchAwardsMode, setTouchAwardsMode] = useState(false)
+  const [isPhone, setIsPhone] = useState(false)
+  const [shuffledGalleryItems] = useState<GalleryItem[]>(() => shuffleArray(galleryItems))
+
+  const spiralCardLayouts = useMemo<SpiralCardLayout[]>(
+    () =>
+      shuffledGalleryItems.map((item, index, items) => {
+        const normalized = items.length > 1 ? index / (items.length - 1) : 0
+        const point = getStaticSpiralPoint(normalized)
+        const panelHeight = point.panelHeight
+        const panelWidth = panelHeight * 0.72
+
+        return {
+          item,
+          style: {
+            height: `${panelHeight}px`,
+            width: `${panelWidth}px`,
+            transform: `translate3d(-50%, calc(-50% + ${point.vertical}px), ${point.depth}px) rotateY(calc(${point.angle}deg + var(--spin-rotation, 0deg))) translateZ(${point.radius}px)`,
+            zIndex: Math.round((1 - normalized) * 100),
+          },
+        }
+      }),
+    [shuffledGalleryItems],
+  )
 
   const getAwardByKey = (key: string) => awardItems.find((award) => getAwardKey(award) === key) ?? null
 
@@ -289,11 +377,18 @@ function App() {
 
   useEffect(() => {
     awardsInputModeMediaRef.current = window.matchMedia('(hover: none), (pointer: coarse)')
+    phoneMediaRef.current = window.matchMedia('(max-width: 640px)')
 
     const syncTouchAwardsMode = () => {
       const nextValue = Boolean(awardsInputModeMediaRef.current?.matches)
       touchAwardsModeRef.current = nextValue
       setTouchAwardsMode(nextValue)
+    }
+
+    const syncPhoneMode = () => {
+      const nextValue = Boolean(phoneMediaRef.current?.matches)
+      isPhoneRef.current = nextValue
+      setIsPhone(nextValue)
     }
 
     const updateProgress = () => {
@@ -339,15 +434,18 @@ function App() {
     }
 
     syncTouchAwardsMode()
+    syncPhoneMode()
     lastKnownScrollYRef.current = window.scrollY
     updateProgress()
     awardsInputModeMediaRef.current.addEventListener('change', syncTouchAwardsMode)
+    phoneMediaRef.current.addEventListener('change', syncPhoneMode)
     window.addEventListener('scroll', requestProgressUpdate, { passive: true })
     window.addEventListener('resize', requestProgressUpdate)
 
     return () => {
       window.cancelAnimationFrame(frameHandleRef.current)
       awardsInputModeMediaRef.current?.removeEventListener('change', syncTouchAwardsMode)
+      phoneMediaRef.current?.removeEventListener('change', syncPhoneMode)
       window.removeEventListener('scroll', requestProgressUpdate)
       window.removeEventListener('resize', requestProgressUpdate)
     }
@@ -463,7 +561,7 @@ function App() {
   }
 
   const introEase = 1 - Math.pow(1 - introProgress, 2.6)
-  const spinRotation = progress * 560 + lerp(-320, 0, introEase)
+  const spinRotation = progress * (isPhone ? 280 : 560) + lerp(-320, 0, introEase)
   const titleOpacity = clamp(1 - progress * 2.8)
   const titleShift = progress * -180
   const titleScale = 1.02 - progress * 0.1
@@ -475,7 +573,9 @@ function App() {
   const stageScale = 0.96 + progress * 0.34
   const stageDepth = 20 + progress * 74
   const glowStrength = 0.2 + progress * 0.55
-  const takeoverProgress = clamp((progress - 0.2) / 0.35)
+  const takeoverStart = isPhone ? 0.3 : 0.35
+  const takeoverDuration = isPhone ? 0.45 : 0.35
+  const takeoverProgress = clamp((progress - takeoverStart) / takeoverDuration)
   const awardsProgress = clamp((progress - 0.62) / 0.22)
   const awardsEase = 1 - Math.pow(1 - awardsProgress, 1.8)
 
@@ -491,6 +591,7 @@ function App() {
 
   const stageStyle: CSSProperties = {
     '--glow-strength': glowStrength.toFixed(3),
+    '--spin-rotation': `${spinRotation}deg`,
     transform: `translate3d(-50%, ${stageY + lerp(-128, 0, introEase)}px, ${stageDepth}px) scale(${lerp(0.9, stageScale, introEase)}) rotateX(-7deg)`,
   } as CSSProperties
 
@@ -522,46 +623,6 @@ function App() {
   const getAwardTrackStyle = (award: AwardItem): CSSProperties => {
     const key = getAwardKey(award)
     return { ['--award-track-shift' as '--award-track-shift']: `${awardTrackOffsets[key] ?? 0}%` } as CSSProperties
-  }
-
-  const entryBandThreshold = 0.18
-
-  const getSpiralPoint = (normalized: number) => {
-    if (normalized <= entryBandThreshold) {
-      const local = normalized / entryBandThreshold
-
-      return {
-        angle: lerp(62, -62, local) + spinRotation,
-        depth: lerp(152, 118, local),
-        panelHeight: lerp(192, 186, local),
-        radius: lerp(500, 452, local),
-        vertical: lerp(-248, -236, local),
-      }
-    }
-
-    const local = (normalized - entryBandThreshold) / (1 - entryBandThreshold)
-
-    return {
-      angle: -56 - local * 780 + spinRotation,
-      depth: lerp(120, -118, local),
-      panelHeight: lerp(184, 126, local),
-      radius: lerp(452, 176, local),
-      vertical: lerp(-248, 356, local),
-    }
-  }
-
-  const spiralCardStyle = (index: number, count: number): CSSProperties => {
-    const normalized = count > 1 ? index / (count - 1) : 0
-    const point = getSpiralPoint(normalized)
-    const panelHeight = point.panelHeight
-    const panelWidth = panelHeight * 0.72
-
-    return {
-      height: `${panelHeight}px`,
-      width: `${panelWidth}px`,
-      transform: `translate3d(-50%, calc(-50% + ${point.vertical}px), ${point.depth}px) rotateY(${point.angle}deg) translateZ(${point.radius}px)`,
-      zIndex: Math.round((1 - normalized) * 100),
-    }
   }
 
   return (
@@ -605,15 +666,8 @@ function App() {
             <div className="spiral-stage" style={stageStyle} id="gallery">
               <div className="spiral-aura" />
               <div className="spiral-column">
-                {galleryItems.map((item, index) => (
-                  <div key={item.filename} className="spiral-card" style={spiralCardStyle(index, galleryItems.length)}>
-                    <div className="spiral-face spiral-face-front">
-                      <img src={item.src} alt={item.alt} loading="lazy" />
-                    </div>
-                    <div className="spiral-face spiral-face-back">
-                      <img src={item.src} alt={item.alt} loading="lazy" />
-                    </div>
-                  </div>
+                {spiralCardLayouts.map(({ item, style }, index) => (
+                  <SpiralCard key={item.filename} item={item} style={style} eager={index < 6} />
                 ))}
               </div>
             </div>
