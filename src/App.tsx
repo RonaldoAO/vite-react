@@ -561,7 +561,7 @@ function App() {
   }
 
   const introEase = 1 - Math.pow(1 - introProgress, 2.6)
-  const spinRotation = progress * (isPhone ? 280 : 560) + lerp(-320, 0, introEase)
+  const spinRotation = progress * (isPhone ? 170 : 560) + lerp(-320, 0, introEase)
   const titleOpacity = clamp(1 - progress * 2.8)
   const titleShift = progress * -180
   const titleScale = 1.02 - progress * 0.1
@@ -573,10 +573,12 @@ function App() {
   const stageScale = 0.96 + progress * 0.34
   const stageDepth = 20 + progress * 74
   const glowStrength = 0.2 + progress * 0.55
-  const takeoverStart = isPhone ? 0.3 : 0.35
-  const takeoverDuration = isPhone ? 0.45 : 0.35
+  const takeoverStart = isPhone ? 0.48 : 0.35
+  const takeoverDuration = isPhone ? 0.4 : 0.35
   const takeoverProgress = clamp((progress - takeoverStart) / takeoverDuration)
-  const awardsProgress = clamp((progress - 0.62) / 0.22)
+  const awardsStart = isPhone ? 0.88 : 0.62
+  const awardsDuration = isPhone ? 0.14 : 0.22
+  const awardsProgress = clamp((progress - awardsStart) / awardsDuration)
   const awardsEase = 1 - Math.pow(1 - awardsProgress, 1.8)
 
   const heroStyle: CSSProperties = {
@@ -702,6 +704,14 @@ function App() {
               <div className="takeover-frame">
                 <img src={takeoverImage.src} alt={takeoverImage.alt} loading="lazy" />
               </div>
+            </div>
+
+            <div className="takeover-mobile-scrollcue" aria-hidden="true">
+              <span className="takeover-mobile-scrollcue-arrow">
+                <span />
+                <span />
+              </span>
+              <p>Keep scrolling</p>
             </div>
           </section>
         </div>

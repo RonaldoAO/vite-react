@@ -417,6 +417,10 @@ img {
   display: block;
 }
 
+.takeover-mobile-scrollcue {
+  display: none;
+}
+
 .awards-panel {
   position: relative;
   min-height: 100vh;
@@ -693,7 +697,13 @@ img {
 
 @media (max-width: 640px) {
   .hero-scene {
-    min-height: 210vh;
+    min-height: 242vh;
+    background: linear-gradient(180deg, #101010 0%, #070707 68%, #f5f4ef 86%, #f5f4ef 100%);
+  }
+
+  .awards-panel {
+    margin-top: -14vh;
+    padding-top: 14vh;
   }
 
   .scene-meta-left {
@@ -809,6 +819,54 @@ img {
     border-radius: 1rem;
   }
 
+  .takeover-mobile-scrollcue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.1rem;
+    z-index: 3;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgba(15, 16, 18, 0.58);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.6rem;
+    font-weight: 700;
+    pointer-events: none;
+    transform: translateX(-50%);
+  }
+
+  .takeover-mobile-scrollcue p {
+    margin: 0;
+    transform: translateY(-3.18rem);
+  }
+
+  .takeover-mobile-scrollcue-arrow {
+    position: relative;
+    width: 0.9rem;
+    height: 1rem;
+    animation: mobileScrollCueFloat 1.15s ease-in-out infinite;
+  }
+
+  .takeover-mobile-scrollcue-arrow span {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 0.55rem;
+    height: 1px;
+    background: currentColor;
+    transform-origin: center;
+  }
+
+  .takeover-mobile-scrollcue-arrow span:first-child {
+    transform: translateX(-78%) rotate(42deg);
+  }
+
+  .takeover-mobile-scrollcue-arrow span:last-child {
+    transform: translateX(-22%) rotate(-42deg);
+  }
+
   .awards-header {
     padding: 5.5rem 0 0.8rem;
   }
@@ -846,5 +904,18 @@ img {
 
   .awards-list {
     padding-bottom: calc((90vw * 17 / 22) + 2rem);
+  }
+}
+
+@keyframes mobileScrollCueFloat {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateY(-0.16rem);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateY(0.16rem);
   }
 }
