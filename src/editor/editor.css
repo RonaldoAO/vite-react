@@ -1,0 +1,364 @@
+.editor-page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 5.5rem minmax(0, 1fr) 20rem;
+  background: #0b0d10;
+  color: #eef3f8;
+  font-family: var(--font-body);
+}
+
+.editor-toolbar,
+.editor-properties {
+  position: relative;
+  z-index: 2;
+  background: #11161d;
+  box-shadow: 0 0 0 1px rgba(238, 243, 248, 0.08) inset;
+}
+
+.editor-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.85rem;
+}
+
+.editor-home {
+  display: grid;
+  place-items: center;
+  min-height: 2.5rem;
+  border: 1px solid rgba(238, 243, 248, 0.16);
+  border-radius: 8px;
+  color: #eef3f8;
+  font-family: var(--font-display);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.editor-tool-section {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.editor-tool-section p,
+.editor-color-panel p {
+  margin: 0;
+  color: rgba(238, 243, 248, 0.58);
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.editor-shape-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.editor-shape-grid button,
+.editor-actions button,
+.editor-properties header,
+.editor-selected-name,
+.editor-empty-state,
+.editor-scene-count {
+  border: 1px solid rgba(238, 243, 248, 0.12);
+  border-radius: 8px;
+  background: rgba(238, 243, 248, 0.06);
+}
+
+.editor-shape-grid button {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  color: #eef3f8;
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.editor-shape-grid button:hover,
+.editor-actions button:hover {
+  border-color: rgba(104, 215, 255, 0.55);
+  background: rgba(104, 215, 255, 0.12);
+}
+
+.editor-scene-count {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.4rem;
+  color: rgba(238, 243, 248, 0.82);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.editor-canvas-wrap {
+  position: relative;
+  min-width: 0;
+  min-height: 100vh;
+}
+
+.editor-canvas-wrap canvas {
+  display: block;
+}
+
+.editor-ai-panel {
+  position: fixed;
+  bottom: 1rem;
+  left: 6.5rem;
+  z-index: 4;
+  display: grid;
+  gap: 0.55rem;
+  width: min(25rem, calc(100vw - 28rem));
+  padding: 0.75rem;
+  border: 1px solid rgba(238, 243, 248, 0.12);
+  border-radius: 8px;
+  background: rgba(17, 22, 29, 0.86);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(16px);
+}
+
+.editor-ai-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+}
+
+.editor-ai-panel input,
+.editor-ai-panel textarea,
+.editor-ai-panel button {
+  border: 1px solid rgba(238, 243, 248, 0.12);
+  border-radius: 8px;
+  background: rgba(238, 243, 248, 0.07);
+  color: #eef3f8;
+}
+
+.editor-ai-panel input,
+.editor-ai-panel textarea {
+  width: 100%;
+  padding: 0.65rem 0.7rem;
+  resize: none;
+}
+
+.editor-ai-panel button {
+  min-width: 5.2rem;
+  padding: 0 0.75rem;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editor-ai-panel button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.editor-ai-panel p {
+  margin: 0;
+  overflow: hidden;
+  color: rgba(238, 243, 248, 0.66);
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-properties {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.editor-properties header {
+  padding: 1rem;
+}
+
+.editor-properties header p,
+.editor-properties header h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+}
+
+.editor-properties header p {
+  color: rgba(238, 243, 248, 0.55);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+
+.editor-properties header h1 {
+  margin-top: 0.35rem;
+  font-size: 1.42rem;
+  line-height: 1.05;
+}
+
+.editor-selected-name {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.75rem;
+  color: #d8f3ff;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editor-property-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+}
+
+.editor-field {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.editor-field span {
+  color: rgba(238, 243, 248, 0.62);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editor-field input {
+  width: 100%;
+  min-height: 2.45rem;
+  border: 1px solid rgba(238, 243, 248, 0.12);
+  border-radius: 8px;
+  background: rgba(238, 243, 248, 0.06);
+  color: #eef3f8;
+  padding: 0 0.65rem;
+}
+
+.editor-color-panel {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.editor-swatches {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+.editor-swatch {
+  aspect-ratio: 1;
+  border: 2px solid rgba(238, 243, 248, 0.18);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.editor-swatch-active {
+  border-color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(104, 215, 255, 0.45);
+}
+
+.editor-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
+}
+
+.editor-actions button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.65rem;
+  color: #eef3f8;
+  cursor: pointer;
+  font-family: var(--font-display);
+  font-size: 0.66rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.editor-empty-state {
+  display: grid;
+  place-items: center;
+  gap: 0.65rem;
+  min-height: 12rem;
+  padding: 1rem;
+  color: rgba(238, 243, 248, 0.68);
+  text-align: center;
+}
+
+.editor-empty-state svg {
+  font-size: 1.8rem;
+}
+
+.editor-empty-state p {
+  margin: 0;
+  max-width: 12rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 920px) {
+  .editor-page {
+    grid-template-columns: 4.7rem minmax(0, 1fr);
+  }
+
+  .editor-properties {
+    position: fixed;
+    right: 0.75rem;
+    bottom: 8.4rem;
+    left: 5.45rem;
+    max-height: 45vh;
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+  }
+
+  .editor-ai-panel {
+    right: 0.75rem;
+    left: 5.45rem;
+    width: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .editor-page {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .editor-toolbar {
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+  }
+
+  .editor-home {
+    min-width: 5.1rem;
+  }
+
+  .editor-tool-section {
+    min-width: 10rem;
+  }
+
+  .editor-canvas-wrap {
+    min-height: calc(100vh - 5.7rem);
+  }
+
+  .editor-properties {
+    left: 0.75rem;
+    bottom: 9.1rem;
+    max-height: 36vh;
+  }
+
+  .editor-ai-panel {
+    right: 0.75rem;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    width: auto;
+  }
+}
